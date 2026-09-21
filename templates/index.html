@@ -3,72 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Podcast Agent</title>
+<meta name="theme-color" content="#05060B">
+<meta name="description" content="PodcastForge — turn a topic into a researched, scripted podcast with multi-speaker TTS playback. Run your first episode free.">
+<title>PodcastForge — Topic to finished podcast episode</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d29;
-    --surface2: #242838;
-    --border: #2e3350;
-    --text: #e8eaf0;
-    --text2: #9499b8;
-    --accent: #7c5cfc;
-    --accent2: #5b3de5;
-    --green: #4ade80;
-    --yellow: #facc15;
-    --red: #f87171;
-    --blue: #60a5fa;
-    --radius: 12px;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --void: #05060B;
+    --abyss: #0A0D15;
+    --panel: #0D111C;
+    --panel-2: #131927;
+    --line: rgba(140, 160, 200, 0.14);
+    --ink: #F0F4FF;
+    --ink-soft: #A6B1CC;
+    --muted: #6A7593;
+    --accent: #F472B6;
+    --accent-soft: #F9A8D4;
+    --green: #4EF2BA;
+    --amber: #FFC53D;
+    --red: #FF3B5C;
+    --blue: #60A5FA;
+    --radius: 14px;
+    --font: 'Space Grotesk', system-ui, sans-serif;
   }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
+    background: var(--void);
+    color: var(--ink);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    -webkit-font-smoothing: antialiased;
   }
+  .font-display { font-family: 'Orbitron', sans-serif; letter-spacing: 0.02em; }
+  .font-head { font-family: 'Chakra Petch', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  ::selection { background: rgba(244,114,182,0.4); color: #fff; }
 
-  .container { max-width: 960px; margin: 0 auto; padding: 24px 20px; width: 100%; }
+  .wrapper { max-width: 920px; margin: 0 auto; padding: 1rem 1rem 0; width: 100%; }
 
-  header {
-    text-align: center;
-    padding: 40px 0 30px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 30px;
+  /* topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(6,8,14,0.85);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    margin-bottom: 32px;
   }
-
-  header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--blue));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .topbar .wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .topbar .wordmark .name { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.08em; }
+  .topbar .cta {
+    margin-left: auto;
+    background: var(--accent); color: #08060d;
+    border-radius: 10px; padding: 9px 16px;
+    font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 0.82rem;
+    text-decoration: none; transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 0 28px -8px rgba(244,114,182,0.8);
   }
+  .topbar .cta:hover { transform: translateY(-1px); }
 
-  header p { color: var(--text2); margin-top: 8px; font-size: 0.95rem; }
+  /* hero */
+  .hero { text-align: center; padding: 1.8rem 0 1.4rem; }
+  .hero .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: rgba(13,17,28,0.6);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .hero .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif; text-transform: uppercase;
+    font-size: 2rem; line-height: 1.06; margin: 1rem auto 0; max-width: 720px;
+  }
+  .hero h1 .accent { color: var(--accent); text-shadow: 0 0 26px rgba(244,114,182,0.55); }
+  .hero p.lead { color: var(--ink-soft); max-width: 600px; margin: 1rem auto 0; line-height: 1.65; }
+  .hero .chips {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px;
+    margin-top: 1.2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted);
+  }
+  .hero .chips span { display: flex; align-items: center; gap: 7px; }
+  .hero .chips .ok { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px rgba(78,242,186,0.8); }
+
+  /* panels */
+  .panel {
+    background: linear-gradient(180deg, rgba(19,25,39,0.92), rgba(13,17,28,0.95));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
 
   .input-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 24px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
   }
-
-  .input-section label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .input-section > label:first-child {
+    display: block; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 1rem;
+    margin-bottom: 12px; letter-spacing: 0.04em; color: var(--ink);
   }
 
   .input-row { display: flex; gap: 12px; }
@@ -76,440 +113,258 @@
   .input-row input {
     flex: 1;
     padding: 12px 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--void);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-
-  .input-row input:focus { border-color: var(--accent); }
-  .input-row input::placeholder { color: var(--text2); }
+  .input-row input:focus { border-color: rgba(244,114,182,0.6); box-shadow: 0 0 0 3px rgba(244,114,182,0.15); }
+  .input-row input::placeholder { color: rgba(106,117,147,0.6); }
 
   .input-row button {
     padding: 12px 28px;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white;
-    font-weight: 600;
-    font-size: 1rem;
+    border-radius: 10px;
+    background: var(--accent); color: #08060d;
+    font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 0.95rem;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
     white-space: nowrap;
+    box-shadow: 0 0 30px -8px rgba(244,114,182,0.8);
+    transition: transform 0.12s, box-shadow 0.2s;
   }
-
-  .input-row button:hover { opacity: 0.9; }
+  .input-row button:hover { transform: translateY(-1px); }
   .input-row button:active { transform: scale(0.97); }
-  .input-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .input-row button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
+  .speaker-divider { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .speaker-divider .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .speaker-divider .row label { font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin: 0; }
+  .speaker-divider .row button { background: var(--panel-2); border: 1px solid var(--line); color: var(--ink-soft); padding: 4px 14px; border-radius: 7px; cursor: pointer; font-size: 0.78rem; font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+  .speaker-config-card {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--void); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px;
+  }
+  .speaker-config-role { background: transparent; border: none; color: var(--ink); font-size: 0.82rem; font-weight: 500; outline: none; width: 110px; padding: 4px 0; font-family: 'Space Grotesk', sans-serif; }
+  .speaker-config-role:focus { color: var(--accent); }
+  .speaker-config-remove { background: none; border: none; color: var(--red); cursor: pointer; font-size: 0.95rem; padding: 0 2px; opacity: 0.5; line-height: 1; }
+  .speaker-config-remove:hover { opacity: 1; }
+
+  /* status */
   .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 500; font-family: 'JetBrains Mono', monospace;
     margin-bottom: 16px;
   }
+  .status-badge.idle { background: var(--panel-2); color: var(--ink-soft); }
+  .status-badge.running { background: rgba(244,114,182,0.15); color: var(--accent); }
+  .status-badge.done { background: rgba(78,242,186,0.15); color: var(--green); }
+  .status-badge.error { background: rgba(255,59,92,0.15); color: var(--red); }
+  .status-badge.playing { background: rgba(96,165,250,0.15); color: var(--blue); }
 
-  .status-badge.idle { background: var(--surface2); color: var(--text2); }
-  .status-badge.running { background: rgba(124, 92, 252, 0.15); color: var(--accent); }
-  .status-badge.done { background: rgba(74, 222, 128, 0.15); color: var(--green); }
-  .status-badge.error { background: rgba(248, 113, 113, 0.15); color: var(--red); }
-  .status-badge.playing { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+  .progress-bar { width: 100%; height: 4px; background: var(--panel-2); border-radius: 4px; overflow: hidden; margin-bottom: 22px; }
+  .progress-bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--blue)); border-radius: 4px; transition: width 0.5s ease; }
 
-  .progress-bar {
-    width: 100%; height: 4px;
-    background: var(--surface2);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-
-  .progress-bar .fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, var(--accent), var(--blue));
-    border-radius: 4px;
-    transition: width 0.5s ease;
-  }
-
-  .stages {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
+  /* stages */
+  .stages { display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr)); gap: 8px; margin-bottom: 22px; }
   .stage-item {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 6px; padding: 12px 8px;
-    border-radius: var(--radius);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    opacity: 0.4;
-    transition: all 0.3s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 12px 8px; border-radius: var(--radius);
+    background: var(--panel); border: 1px solid var(--line);
+    opacity: 0.45; transition: all 0.3s;
   }
-
-  .stage-item.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 20px rgba(124, 92, 252, 0.15); }
+  .stage-item.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 22px rgba(244,114,182,0.18); }
   .stage-item.done { opacity: 1; border-color: var(--green); }
-  .stage-item .icon { font-size: 1.3rem; line-height: 1; }
-  .stage-item .name { font-size: 0.75rem; font-weight: 500; text-align: center; color: var(--text2); }
+  .stage-item .icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
+  .stage-item .icon svg { width: 22px; height: 22px; }
+  .stage-item .name { font-size: 0.72rem; font-weight: 600; text-align: center; color: var(--ink-soft); font-family: 'Chakra Petch', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
   .stage-item.done .name { color: var(--green); }
-  .stage-item.active .name { color: var(--text); }
+  .stage-item.active .name { color: var(--ink); }
 
-  .output-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    min-height: 300px;
-  }
-
+  /* output */
+  .output-panel { margin-bottom: 16px; }
   .output-panel .tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-    overflow-x: auto;
+    display: flex; border-bottom: 1px solid var(--line);
+    background: var(--panel-2); overflow-x: auto; scrollbar-width: none;
   }
-
+  .output-panel .tabs::-webkit-scrollbar { display: none; }
   .output-panel .tabs button {
     padding: 10px 16px; border: none;
-    background: transparent; color: var(--text2);
-    font-size: 0.8rem; font-weight: 500;
+    background: transparent; color: var(--ink-soft);
+    font-family: 'Chakra Petch', sans-serif; font-size: 0.78rem; font-weight: 600;
     cursor: pointer;
     border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
+    transition: all 0.2s; white-space: nowrap;
   }
-
-  .output-panel .tabs button:hover { color: var(--text); }
+  .output-panel .tabs button:hover { color: var(--ink); }
   .output-panel .tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
 
   .output-panel .tab-content {
     padding: 20px; display: none;
     max-height: 500px; overflow-y: auto;
-    line-height: 1.6; font-size: 0.9rem;
+    line-height: 1.6; font-size: 0.88rem;
     white-space: pre-wrap;
   }
-
   .output-panel .tab-content.active { display: block; }
-  .output-panel .tab-content.empty { color: var(--text2); font-style: italic; }
+  .output-panel .tab-content.empty { color: var(--ink-soft); font-style: italic; }
 
   .tab-content .line-highlight {
-    background: rgba(124, 92, 252, 0.15);
+    background: rgba(244,114,182,0.12);
     border-left: 3px solid var(--accent);
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 3px 10px; border-radius: 6px;
     transition: background 0.3s;
   }
-
   .research-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
+    background: var(--void); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 8px;
   }
-
-  .research-card .src { font-size: 0.7rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .research-card .src { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
   .research-card .title { font-weight: 600; margin: 4px 0; }
-  .research-card .snippet { color: var(--text2); font-size: 0.85rem; }
+  .research-card .snippet { color: var(--ink-soft); font-size: 0.82rem; }
 
+  /* tts */
   .tts-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(19,25,39,0.92), rgba(13,17,28,0.95));
+    border: 1px solid var(--line);
     border-radius: var(--radius);
     padding: 20px;
-    margin-top: 16px;
+    margin-bottom: 18px;
   }
+  .tts-section h3 { font-family: 'Chakra Petch', sans-serif; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; color: var(--ink); }
+  .tts-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .tts-voice-group { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
+  .tts-voice-group label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
 
-  .tts-section h3 {
-    font-size: 0.9rem;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 14px;
+  .tts-voice-select, .tts-controls select {
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--void); color: var(--ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; outline: none; cursor: pointer;
+    transition: border-color 0.2s;
   }
-
-  .tts-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .tts-voice-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 180px;
-  }
-
-  .tts-voice-group label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .tts-voice-select {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 0.85rem;
-    outline: none;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  .tts-controls select {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 0.85rem;
-    outline: none;
-    cursor: pointer;
-    min-width: 100px;
-  }
-
-  .tts-controls select:focus { border-color: var(--accent); }
-  .tts-voice-select:focus { border-color: var(--accent); }
+  .tts-controls select { min-width: 100px; width: 100%; }
+  .tts-voice-select:focus, .tts-controls select:focus { border-color: rgba(244,114,182,0.6); }
 
   .tts-speaker-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    background: rgba(124, 92, 252, 0.15);
-    color: var(--accent);
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 500; font-family: 'JetBrains Mono', monospace;
+    background: rgba(244,114,182,0.15); color: var(--accent);
     margin-left: auto;
   }
 
   .tts-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    padding: 8px 16px; border: none; border-radius: 8px;
+    font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 0.82rem;
+    cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 6px;
   }
-
   .tts-btn:hover { opacity: 0.9; }
   .tts-btn:active { transform: scale(0.97); }
   .tts-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .tts-btn.play { background: var(--accent); color: #08060d; }
+  .tts-btn.pause { background: var(--amber); color: #111; }
+  .tts-btn.stop { background: var(--red); color: #fff; }
 
-  .tts-btn.play { background: var(--accent); color: white; }
-  .tts-btn.pause { background: var(--yellow); color: #000; }
-  .tts-btn.stop { background: var(--red); color: white; }
-
-  .tts-status {
-    font-size: 0.8rem;
-    color: var(--text2);
-    margin-left: auto;
-  }
-
-  .tts-global-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tts-actor-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
+  .tts-status { font-size: 0.78rem; color: var(--ink-soft); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
+  .tts-global-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .tts-actor-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .tts-actor-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    flex: 1;
-    min-width: 220px;
-    position: relative;
+    background: var(--void); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; flex: 1; min-width: 200px;
   }
-
-  .tts-actor-card .actor-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .tts-actor-card .actor-label {
-    font-weight: 600;
-    font-size: 0.8rem;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .tts-actor-card .actor-remove {
-    background: none;
-    border: none;
-    color: var(--red);
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    opacity: 0.5;
-    transition: opacity 0.2s;
-  }
-
+  .tts-actor-card .actor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .tts-actor-card .actor-label { font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 0.78rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
+  .tts-actor-card .actor-remove { background: none; border: none; color: var(--red); font-size: 1.05rem; cursor: pointer; padding: 0 4px; line-height: 1; opacity: 0.5; transition: opacity 0.2s; }
   .tts-actor-card .actor-remove:hover { opacity: 1; }
-
   .tts-actor-card select {
-    width: 100%;
-    padding: 7px 10px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface);
-    color: var(--text);
-    font-size: 0.82rem;
-    outline: none;
-    cursor: pointer;
-    margin-bottom: 6px;
+    width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--panel); color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+    outline: none; cursor: pointer; margin-bottom: 6px; transition: border-color 0.2s;
   }
-
-  .tts-actor-card select:focus { border-color: var(--accent); }
-
+  .tts-actor-card select:focus { border-color: rgba(244,114,182,0.6); }
   .tts-actor-card .role-input {
-    width: 100%;
-    padding: 7px 10px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface);
-    color: var(--text);
-    font-size: 0.9rem;
-    font-weight: 600;
-    outline: none;
-    cursor: text;
-    margin-bottom: 6px;
+    width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--panel); color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 600;
+    outline: none; cursor: text; margin-bottom: 6px; transition: border-color 0.2s;
   }
+  .tts-actor-card .role-input:focus { border-color: rgba(244,114,182,0.6); }
+  .tts-voices-info { font-size: 0.72rem; color: var(--ink-soft); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; }
 
-  .tts-actor-card .role-input:focus { border-color: var(--accent); }
-
-  .tts-actor-card .voice-select {
-    margin-bottom: 0;
-  }
-
-  .tts-voices-info {
-    font-size: 0.75rem;
-    color: var(--text2);
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-  }
-
-  footer { text-align: center; padding: 24px; color: var(--text2); font-size: 0.8rem; margin-top: auto; }
-
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(124, 92, 252, 0.3);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-    margin-right: 6px;
-  }
-
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(244,114,182,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 6px; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
   .toast {
     position: fixed; bottom: 24px; right: 24px;
-    padding: 12px 20px; border-radius: 8px;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-size: 0.9rem;
+    padding: 12px 20px; border-radius: 10px;
+    background: var(--panel); border: 1px solid var(--line);
+    color: var(--ink); font-size: 0.88rem;
     transform: translateY(100px); opacity: 0;
     transition: all 0.3s; z-index: 100;
+    font-family: 'Space Grotesk', sans-serif;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
 
-  .speaker-config-card {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 10px;
-  }
+  .footer { text-align: center; padding: 18px; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; margin-top: auto; }
+  .footer a { color: var(--accent); text-decoration: none; }
 
-  .speaker-config-card .speaker-config-role {
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-size: 0.85rem;
-    font-weight: 500;
-    outline: none;
-    width: 110px;
-    padding: 4px 0;
-  }
-
-  .speaker-config-card .speaker-config-role:focus { color: var(--accent); }
-
-  .speaker-config-card .speaker-config-remove {
-    background: none;
-    border: none;
-    color: var(--red);
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 0 2px;
-    opacity: 0.5;
-    line-height: 1;
-  }
-
-  .speaker-config-card .speaker-config-remove:hover { opacity: 1; }
-
-  @media (max-width: 600px) {
-    .container { padding: 16px 12px; }
-    header h1 { font-size: 1.5rem; }
+  @media (max-width: 640px) {
+    .wrapper { padding: 14px 10px 0; }
+    .hero h1 { font-size: 1.45rem; }
     .input-row { flex-direction: column; }
     .input-row button { width: 100%; }
     .stages { grid-template-columns: repeat(3, 1fr); }
     .tts-controls { flex-direction: column; align-items: stretch; }
     .tts-controls select { width: 100%; }
+    .topbar .cta { padding: 8px 12px; font-size: 0.78rem; }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <h1>AI Podcast Agent</h1>
-    <p>Enter a topic — AI researches, writes, critiques, and refines a podcast script with TTS playback</p>
-  </header>
+<div class="wrapper">
+  <div class="topbar">
+    <a class="wordmark" href="/">
+      <svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="19" y="10" width="26" height="22" rx="13" stroke="#F472B6" stroke-width="3" fill="none"/>
+        <path d="M10 22a20 20 0 0 0 44 0" stroke="#F472B6" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <path d="M16 28a14 14 0 0 1 32 0" stroke="#F472B6" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.55"/>
+        <path d="M32 32v12M26 44h12" stroke="#F472B6" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="32" cy="19" r="2" fill="#F472B6"/>
+      </svg>
+      <span class="name">PODCASTFORGE</span>
+    </a>
+    <a class="cta" href="#forge">Try it free</a>
+  </div>
 
-  <div class="input-section">
+  <section class="hero">
+    <p class="eyebrow"><span class="dot"></span> research to playback in one tool</p>
+    <h1>Enter a topic.<br><span class="accent">AI writes, critiques &amp; voices it.</span></h1>
+    <p class="lead">
+      PodcastForge turns a topic into a researched outline, a full episode script
+      with a built-in critic, and a playable multi-voice podcast. Run your first
+      episode free.
+    </p>
+    <div class="chips">
+      <span><i class="ok"></i>Research-backed</span>
+      <span><i class="ok"></i>Critique loop built in</span>
+      <span><i class="ok"></i>Multi-speaker TTS</span>
+    </div>
+  </section>
+
+  <div class="input-section panel" id="forge">
     <label for="topic">Podcast Topic</label>
     <div class="input-row">
       <input type="text" id="topic" placeholder="e.g. Quantum Computing, AI in Healthcare, Space Exploration..." value="Explain LLM fine-tuning techniques">
       <button id="generateBtn" onclick="startGeneration()">Generate Podcast</button>
     </div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <label style="font-size:0.85rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:0;">Speakers</label>
-        <button id="addSpeakerConfigBtn" onclick="addSpeakerConfig()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;">+ Add</button>
+    <div class="speaker-divider">
+      <div class="row">
+        <label>Speakers</label>
+        <button id="addSpeakerConfigBtn" onclick="addSpeakerConfig()">+ Add</button>
       </div>
       <div id="speakerConfigs" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
     </div>
@@ -520,22 +375,36 @@
       <span class="spinner" id="statusSpinner" style="display:none;"></span>
       <span id="statusText">Ready</span>
     </div>
-
-    <div class="progress-bar">
-      <div class="fill" id="progressFill"></div>
-    </div>
-
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
     <div class="stages">
-      <div class="stage-item" data-stage="outline"><span class="icon">📋</span><span class="name">Outline</span></div>
-      <div class="stage-item" data-stage="research"><span class="icon">🔍</span><span class="name">Research</span></div>
-      <div class="stage-item" data-stage="write"><span class="icon">✍️</span><span class="name">Write</span></div>
-      <div class="stage-item" data-stage="critique"><span class="icon">🎯</span><span class="name">Critique</span></div>
-      <div class="stage-item" data-stage="revise"><span class="icon">🔄</span><span class="name">Revise</span></div>
-      <div class="stage-item" data-stage="done"><span class="icon">✅</span><span class="name">Done</span></div>
+      <div class="stage-item" data-stage="outline">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"><path d="M7 7h10M7 12h8M7 17h6"/></svg></span>
+        <span class="name">Outline</span>
+      </div>
+      <div class="stage-item" data-stage="research">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"><circle cx="10" cy="10" r="5"/><path d="M14 14l5 5"/></svg></span>
+        <span class="name">Research</span>
+      </div>
+      <div class="stage-item" data-stage="write">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l4 4L9 19H5v-4L15 5z"/></svg></span>
+        <span class="name">Write</span>
+      </div>
+      <div class="stage-item" data-stage="critique">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 4.8L20 8.4l-4 3.9 1 5.7-5-2.6-5 2.6 1-5.7-4-3.9 5.6-1.6z"/></svg></span>
+        <span class="name">Critique</span>
+      </div>
+      <div class="stage-item" data-stage="revise">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>
+        <span class="name">Revise</span>
+      </div>
+      <div class="stage-item" data-stage="done">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span class="name">Done</span>
+      </div>
     </div>
   </div>
 
-  <div class="output-panel">
+  <div class="output-panel panel">
     <div class="tabs" id="tabBar">
       <button class="active" data-tab="outline">Outline</button>
       <button data-tab="research">Research</button>
@@ -543,31 +412,30 @@
       <button data-tab="critique">Critique</button>
       <button data-tab="final">Final Script</button>
     </div>
-
     <div class="tab-content active" id="tab-outline">
-      <div class="empty" id="outlinePlaceholder">⏳ Generate a podcast to see the outline...</div>
+      <div class="empty" id="outlinePlaceholder">Generate a podcast to see the outline...</div>
       <div id="outlineContent" style="display:none;"></div>
     </div>
     <div class="tab-content" id="tab-research">
-      <div class="empty" id="researchPlaceholder">⏳ Research results will appear here...</div>
+      <div class="empty" id="researchPlaceholder">Research results will appear here...</div>
       <div id="researchContent" style="display:none;"></div>
     </div>
     <div class="tab-content" id="tab-draft">
-      <div class="empty" id="draftPlaceholder">⏳ Draft script will appear here...</div>
+      <div class="empty" id="draftPlaceholder">Draft script will appear here...</div>
       <div id="draftContent" style="display:none;"></div>
     </div>
     <div class="tab-content" id="tab-critique">
-      <div class="empty" id="critiquePlaceholder">⏳ Critique will appear here...</div>
+      <div class="empty" id="critiquePlaceholder">Critique will appear here...</div>
       <div id="critiqueContent" style="display:none;"></div>
     </div>
     <div class="tab-content" id="tab-final">
-      <div class="empty" id="finalPlaceholder">⏳ Final script will appear here...</div>
+      <div class="empty" id="finalPlaceholder">Final script will appear here...</div>
       <div id="finalContent" style="display:none;"></div>
     </div>
   </div>
 
   <div class="tts-section" id="ttsSection" style="display:none;">
-    <h3>🎙️ Podcast Voices</h3>
+    <h3>Podcast Voices</h3>
     <div class="tts-global-row">
       <div class="tts-voice-group">
         <label>Language</label>
@@ -586,18 +454,18 @@
           <option value="2">2x</option>
         </select>
       </div>
-      <button class="tts-btn play" id="ttsPlayBtn" onclick="ttsPlay()">▶ Play</button>
-      <button class="tts-btn pause" id="ttsPauseBtn" onclick="ttsPause()" disabled>⏸ Pause</button>
-      <button class="tts-btn stop" id="ttsStopBtn" onclick="ttsStop()" disabled>⏹ Stop</button>
+      <button class="tts-btn play" id="ttsPlayBtn" onclick="ttsPlay()">Play</button>
+      <button class="tts-btn pause" id="ttsPauseBtn" onclick="ttsPause()" disabled>Pause</button>
+      <button class="tts-btn stop" id="ttsStopBtn" onclick="ttsStop()" disabled>Stop</button>
       <span class="tts-status" id="ttsStatus">Ready</span>
       <span class="tts-speaker-badge" id="ttsSpeakerBadge" style="display:none;"></span>
     </div>
     <div class="tts-actor-row" id="ttsActors"></div>
     <div style="margin-top:10px;">
-      <button class="tts-btn" id="ttsAddSpeakerBtn" onclick="addSpeaker()" style="background:var(--surface2);color:var(--text2);font-size:0.8rem;">+ Add Speaker</button>
+      <button class="tts-btn" id="ttsAddSpeakerBtn" onclick="addSpeaker()" style="background:var(--panel-2);color:var(--ink-soft);font-size:0.78rem;">+ Add Speaker</button>
     </div>
     <div class="tts-controls" style="margin-top:8px;">
-      <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--text2);cursor:pointer;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-soft);cursor:pointer;">
         <input type="checkbox" id="ttsAmbientSounds" checked>
         Ambient sounds (laughs, breaths, etc.)
       </label>
@@ -615,7 +483,7 @@
   <option value="Scientist"><option value="Doctor"><option value="Client">
   <option value="Judge"><option value="Coach"><option value="Founder">
 </datalist>
-<footer>Powered by LangGraph + Gemini · TTS via Web Speech API</footer>
+<div class="footer">Powered by LangGraph + Gemini · TTS via Web Speech API · <a href="#forge">start a free episode</a></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -663,7 +531,6 @@ const AMBIENT_SOUNDS = {
 
 function getVoiceForRole(roleName, fallbackIndex) {
   const cards = document.querySelectorAll('.tts-actor-card');
-  // First, try exact role match
   for (const card of cards) {
     const r = card.querySelector('.role-input');
     if (r && r.value.trim().toLowerCase() === roleName.trim().toLowerCase()) {
@@ -672,10 +539,8 @@ function getVoiceForRole(roleName, fallbackIndex) {
       if (idx !== '' && ttsVoices[parseInt(idx)]) return ttsVoices[parseInt(idx)];
     }
   }
-  // Retry without trailing number (e.g. "Host 1" -> "Host")
   const base = roleName.replace(/\s+\d+$/, '').trim();
   if (base !== roleName) return getVoiceForRole(base, fallbackIndex);
-  // Fallback: use card index matching the role index in the script
   if (fallbackIndex !== undefined) {
     const card = cards[fallbackIndex];
     if (card) {
@@ -684,7 +549,6 @@ function getVoiceForRole(roleName, fallbackIndex) {
       if (idx !== '' && ttsVoices[parseInt(idx)]) return ttsVoices[parseInt(idx)];
     }
   }
-  // Last resort: English voice (prefer selected language)
   const lang = document.getElementById('ttsLang').value;
   let match = lang ? ttsVoices.find(v => v.lang === lang) : null;
   if (!match) match = ttsVoices.find(v => v.lang && v.lang.startsWith('en-'));
@@ -696,7 +560,7 @@ function populateLangSelect() {
   const allLangs = [...new Set(ttsVoices.map(v => v.lang).filter(Boolean))].sort();
   const english = allLangs.filter(l => l.startsWith('en-'));
   const options = english.length ? english : allLangs;
-  langSel.innerHTML = options.map(l => `<option value="${l}">${l}</option>`).join('');
+  langSel.innerHTML = options.map(l => '<option value="' + l + '">' + l + '</option>').join('');
   if (options.includes('en-US')) langSel.value = 'en-US';
   else if (options.includes('en-GB')) langSel.value = 'en-GB';
   else if (options.length) langSel.value = options[0];
@@ -711,7 +575,7 @@ function refreshVoiceOptions() {
     let html = '';
     ttsVoices.forEach((v, i) => {
       if (lang && v.lang !== lang) return;
-      html += `<option value="${i}">${v.name} (${v.lang})</option>`;
+      html += '<option value="' + i + '">' + v.name + ' (' + v.lang + ')</option>';
     });
     select.innerHTML = html;
     if (current && parseInt(current) < ttsVoices.length) {
@@ -720,7 +584,6 @@ function refreshVoiceOptions() {
     }
     if (!select.value && html) {
       const opts = select.options;
-      // Separate by gender for more diverse defaults
       const males = [], females = [], others = [];
       for (let o = 0; o < opts.length; o++) {
         const v = ttsVoices[parseInt(opts[o].value)];
@@ -747,14 +610,13 @@ function updateVoiceDisplay(card) {
   const idx = select.value;
   if (idx !== '' && ttsVoices[parseInt(idx)]) {
     const v = ttsVoices[parseInt(idx)];
-    const gender = v.name.toLowerCase().includes('female') ? '♀' : v.name.toLowerCase().includes('male') ? '♂' : '●';
-    display.textContent = `${gender} ${v.name} (${v.lang})`;
+    const gender = v.name.toLowerCase().includes('female') ? '\u2640' : v.name.toLowerCase().includes('male') ? '\u2642' : '\u25CF';
+    display.textContent = gender + ' ' + v.name + ' (' + v.lang + ')';
   } else {
     display.textContent = 'No voice selected';
   }
 }
 
-// Update voice name display when selection changes
 document.addEventListener('change', function(e) {
   if (e.target.classList.contains('voice-select')) {
     const card = e.target.closest('.tts-actor-card');
@@ -774,7 +636,7 @@ function updateVoiceInfo() {
   const m = filtered.filter(v => v.name.toLowerCase().includes('male')).length;
   const f = filtered.filter(v => v.name.toLowerCase().includes('female')).length;
   document.getElementById('ttsVoiceInfo').textContent =
-    `${filtered.length} voices · ${f} female · ${m} male` + (lang ? ` (${lang})` : '');
+    filtered.length + ' voices \u00B7 ' + f + ' female \u00B7 ' + m + ' male' + (lang ? ' (' + lang + ')' : '');
 }
 
 function updateCardHeader(card) {
@@ -790,19 +652,17 @@ function buildSpeakerCard(index) {
   const canRemove = index >= 2;
   const defaultRole = DEFAULT_ROLES[index] || 'Speaker';
   const presets = ROLE_PRESETS.map(r =>
-    `<option value="${r}"${r === defaultRole ? ' selected' : ''}>${r}</option>`
+    '<option value="' + r + '"' + (r === defaultRole ? ' selected' : '') + '>' + r + '</option>'
   ).join('');
 
-  card.innerHTML = `
-    <div class="actor-header">
-      <span class="actor-label">${defaultRole}</span>
-      ${canRemove ? '<button class="actor-remove" onclick="removeSpeaker(this)" title="Remove">✕</button>' : ''}
-    </div>
-    <input class="role-input" type="text" value="${defaultRole}" list="roleList${index}" spellcheck="false">
-    <datalist id="roleList${index}">${presets}</datalist>
-    <select class="voice-select"></select>
-    <div class="voice-name" style="font-size:0.72rem;color:var(--text2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-  `;
+  card.innerHTML =
+    '<div class="actor-header"><span class="actor-label">' + defaultRole + '</span>' +
+    (canRemove ? '<button class="actor-remove" onclick="removeSpeaker(this)" title="Remove">x</button>' : '') +
+    '</div>' +
+    '<input class="role-input" type="text" value="' + defaultRole + '" list="roleList' + index + '" spellcheck="false">' +
+    '<datalist id="roleList' + index + '">' + presets + '</datalist>' +
+    '<select class="voice-select"></select>' +
+    '<div class="voice-name" style="font-size:0.72rem;color:var(--ink-soft);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>';
 
   const input = card.querySelector('.role-input');
   input.addEventListener('input', () => updateCardHeader(card));
@@ -839,18 +699,8 @@ function renderSpeakers() {
   refreshVoiceOptions();
 }
 
-function addSpeaker() {
-  if (speakerCount >= 3) return;
-  speakerCount++;
-  renderSpeakers();
-}
-
-function removeSpeaker(btn) {
-  const card = btn.closest('.tts-actor-card');
-  if (!card) return;
-  speakerCount--;
-  renderSpeakers();
-}
+function addSpeaker() { if (speakerCount >= 3) return; speakerCount++; renderSpeakers(); }
+function removeSpeaker(btn) { const card = btn.closest('.tts-actor-card'); if (!card) return; speakerCount--; renderSpeakers(); }
 
 function loadVoices() {
   ttsVoices = speechSynthesis.getVoices();
@@ -873,9 +723,7 @@ document.getElementById('ttsLang').addEventListener('change', refreshVoiceOption
 function parseLine(raw) {
   let text = raw.replace(/\*\*/g, '').trim();
   const match = text.match(/^([\w\s]+?)\s*:\s*(.*)/);
-  if (match) {
-    return { role: match[1].trim(), text: match[2].trim() };
-  }
+  if (match) return { role: match[1].trim(), text: match[2].trim() };
   return { role: '', text };
 }
 
@@ -913,9 +761,7 @@ function speakLine(text, voice, speed, callback) {
   if (cleanText) {
     const utt = new SpeechSynthesisUtterance(cleanText);
     if (voice) utt.voice = voice;
-    utt.rate = speed;
-    utt.pitch = 1;
-    utt.volume = 1;
+    utt.rate = speed; utt.pitch = 1; utt.volume = 1;
     queue.push(utt);
   }
   if (ambientEnabled) {
@@ -972,7 +818,6 @@ function playNextLine() {
   const parsed = parseLine(raw);
   highlightLine(ttsCurrentLine);
   const speed = parseFloat(document.getElementById('ttsSpeed').value);
-  // Find fallback index: which position does this role occupy in lastRoles?
   let fallbackIdx = 0;
   if (parsed.role && lastRoles.length) {
     const found = lastRoles.findIndex(r => r.toLowerCase() === parsed.role.toLowerCase());
@@ -987,7 +832,7 @@ function playNextLine() {
   }
   const voice = parsed.role ? getVoiceForRole(parsed.role, fallbackIdx) : ttsVoices[0];
   const badge = document.getElementById('ttsSpeakerBadge');
-  badge.textContent = parsed.role ? `🎙 ${parsed.role}` : '🎙 Narrator';
+  badge.textContent = parsed.role ? parsed.role : 'Narrator';
   speakLine(parsed.text, voice, speed, () => {
     if (ttsIsPlaying && !ttsIsPaused) playNextLine();
   });
@@ -997,12 +842,12 @@ function ttsPause() {
   if (ttsIsPaused) {
     ttsIsPaused = false;
     speechSynthesis.resume();
-    document.getElementById('ttsPauseBtn').textContent = '⏸ Pause';
+    document.getElementById('ttsPauseBtn').textContent = 'Pause';
     document.getElementById('ttsStatus').textContent = 'Playing...';
   } else {
     ttsIsPaused = true;
     speechSynthesis.pause();
-    document.getElementById('ttsPauseBtn').textContent = '▶ Resume';
+    document.getElementById('ttsPauseBtn').textContent = 'Resume';
     document.getElementById('ttsStatus').textContent = 'Paused';
   }
 }
@@ -1016,7 +861,7 @@ function ttsStop() {
   document.getElementById('ttsPlayBtn').disabled = false;
   document.getElementById('ttsPauseBtn').disabled = true;
   document.getElementById('ttsStopBtn').disabled = true;
-  document.getElementById('ttsPauseBtn').textContent = '⏸ Pause';
+  document.getElementById('ttsPauseBtn').textContent = 'Pause';
   document.getElementById('ttsStatus').textContent = 'Stopped';
   document.getElementById('ttsSpeakerBadge').style.display = 'none';
   setStatus('done', 'Complete');
@@ -1078,7 +923,7 @@ function completeStage(sid) {
 function switchTab(tabId) {
   document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-  const btn = document.querySelector(`.tabs button[data-tab="${tabId}"]`);
+  const btn = document.querySelector('.tabs button[data-tab="' + tabId + '"]');
   if (btn) btn.classList.add('active');
   const content = document.getElementById(tabMap[tabId] || ('tab-' + tabId));
   if (content) content.classList.add('active');
@@ -1097,27 +942,23 @@ function showToast(msg) {
 
 function renderMarkdown(text) {
   return text
-    .replace(/### (.+)/g, '<h3>$1</h3>')
-    .replace(/## (.+)/g, '<h2>$1</h2>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/### (.+)/g, '<h3 style="font-family:Chakra Petch,sans-serif;font-size:0.95rem;color:var(--ink);margin:0.6em 0 0.3em;">$1</h3>')
+    .replace(/## (.+)/g, '<h2 style="font-family:Chakra Petch,sans-serif;font-size:1.05rem;color:var(--ink);margin:0.8em 0 0.4em;">$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--ink)">$1</strong>')
     .replace(/\n/g, '<br>');
 }
 
 function renderAsLines(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  return lines.map(l => `<div>${l}</div>`).join('');
+  return lines.map(l => '<div>' + l + '</div>').join('');
 }
 
 function renderResearch(results) {
   let html = '';
   (Array.isArray(results) ? results : []).forEach(r => {
-    html += `<div class="research-card">
-      <div class="src">${r.source || 'Source'}</div>
-      <div class="title">${r.title || ''}</div>
-      <div class="snippet">${r.snippet || r.page_content || ''}</div>
-    </div>`;
+    html += '<div class="research-card"><div class="src">' + (r.source || 'Source') + '</div><div class="title">' + (r.title || '') + '</div><div class="snippet">' + (r.snippet || r.page_content || '') + '</div></div>';
   });
-  return html || '<div class="empty">No research results yet.</div>';
+  return html || '<div class="empty" style="color:var(--ink-soft);font-style:italic;">No research results yet.</div>';
 }
 
 // ============ Speaker Config ============
@@ -1134,10 +975,9 @@ function addSpeakerConfig(role) {
   const defaultRole = role || (idx === 0 ? 'Host' : idx === 1 ? 'Student' : 'Expert');
   const card = document.createElement('div');
   card.className = 'speaker-config-card';
-  card.innerHTML = `
-    <input class="speaker-config-role" type="text" value="${defaultRole}" list="rolesDatalist" spellcheck="false">
-    ${existing.length >= 2 ? '<button class="speaker-config-remove" onclick="this.parentElement.remove();updateAddBtn()">✕</button>' : ''}
-  `;
+  card.innerHTML =
+    '<input class="speaker-config-role" type="text" value="' + defaultRole + '" list="rolesDatalist" spellcheck="false">' +
+    (existing.length >= 2 ? '<button class="speaker-config-remove" onclick="this.parentElement.remove();updateAddBtn()">x</button>' : '');
   container.appendChild(card);
   updateAddBtn();
 }
@@ -1152,7 +992,6 @@ function getSpeakerRoles() {
   return [...cards].map(c => c.querySelector('.speaker-config-role').value.trim()).filter(Boolean);
 }
 
-// Init with 2 default speakers
 addSpeakerConfig('Host');
 addSpeakerConfig('Student');
 
@@ -1211,10 +1050,9 @@ async function startGeneration() {
     setStatus('done', 'Complete!');
     document.getElementById('generateBtn').disabled = false;
     document.getElementById('ttsSection').style.display = 'block';
-    // Pre-populate TTS with the roles used
     lastRoles = roles.slice();
     setupTTSCards(roles);
-    showToast('✅ Podcast generated! Use TTS controls to play it.');
+    showToast('Podcast generated. Use TTS controls to play it.');
   } catch (err) {
     setStatus('error', 'Error: ' + err.message);
     document.getElementById('generateBtn').disabled = false;
@@ -1236,37 +1074,36 @@ function handleSSEEvent(event, data) {
       break;
     case 'outline':
       document.getElementById('outlinePlaceholder').style.display = 'none';
-      const oc = document.getElementById('outlineContent');
+      var oc = document.getElementById('outlineContent');
       oc.style.display = 'block';
       oc.innerHTML = renderMarkdown(data.outline || '');
       break;
     case 'research':
       document.getElementById('researchPlaceholder').style.display = 'none';
-      const rc = document.getElementById('researchContent');
+      var rc = document.getElementById('researchContent');
       rc.style.display = 'block';
       rc.innerHTML = renderResearch(data.results || []);
       break;
     case 'draft':
       document.getElementById('draftPlaceholder').style.display = 'none';
-      const dc = document.getElementById('draftContent');
+      var dc = document.getElementById('draftContent');
       dc.style.display = 'block';
       dc.innerHTML = renderMarkdown(data.draft || '');
       break;
     case 'critique':
       document.getElementById('critiquePlaceholder').style.display = 'none';
-      const cc = document.getElementById('critiqueContent');
+      var cc = document.getElementById('critiqueContent');
       cc.style.display = 'block';
       cc.innerHTML = renderMarkdown(data.critique || '');
       break;
     case 'revision':
-    case 'complete': {
-      const draft = data.draft || data.final_draft || '';
+    case 'complete':
+      var draft = data.draft || data.final_draft || '';
       document.getElementById('finalPlaceholder').style.display = 'none';
-      const fc = document.getElementById('finalContent');
+      var fc = document.getElementById('finalContent');
       fc.style.display = 'block';
       fc.innerHTML = renderAsLines(draft);
       break;
-    }
     case 'error':
       setStatus('error', 'Error occurred');
       showToast(data.message || 'An error occurred');
