@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import time
-from typing import AsyncGenerator
 from pathlib import Path
 
 from fastapi import FastAPI, Request
